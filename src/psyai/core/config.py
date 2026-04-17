@@ -30,7 +30,9 @@ class Settings(BaseSettings):
     # Application Settings
     app_name: str = Field(default="PsyAI", description="Application name")
     app_version: str = Field(default="0.1.0", description="Application version")
-    app_env: str = Field(default="development", description="Environment: development, staging, production")
+    app_env: str = Field(
+        default="development", description="Environment: development, staging, production"
+    )
     app_debug: bool = Field(default=True, description="Debug mode")
     log_level: str = Field(default="INFO", description="Logging level")
 
@@ -41,7 +43,9 @@ class Settings(BaseSettings):
     api_workers: int = Field(default=1, description="Number of workers")
 
     # Security
-    secret_key: str = Field(default="your-secret-key-change-in-production", description="Secret key for JWT")
+    secret_key: str = Field(
+        default="your-secret-key-change-in-production", description="Secret key for JWT"
+    )
     algorithm: str = Field(default="HS256", description="JWT algorithm")
     access_token_expire_minutes: int = Field(default=30, description="Access token expiration")
 
@@ -65,7 +69,9 @@ class Settings(BaseSettings):
     # Google Cloud / Vertex AI Configuration
     gcp_project_id: Optional[str] = Field(default=None, description="GCP Project ID")
     gcp_location: str = Field(default="us-central1", description="GCP Location/Region")
-    gcp_credentials_path: Optional[str] = Field(default=None, description="Path to GCP service account JSON")
+    gcp_credentials_path: Optional[str] = Field(
+        default=None, description="Path to GCP service account JSON"
+    )
 
     # Vertex AI Model Configuration
     vertex_model: str = Field(default="gemini-1.5-pro", description="Vertex AI model name")
@@ -76,8 +82,7 @@ class Settings(BaseSettings):
 
     # Vertex AI Embeddings Configuration
     vertex_embedding_model: str = Field(
-        default="text-embedding-004",
-        description="Vertex AI embedding model"
+        default="text-embedding-004", description="Vertex AI embedding model"
     )
     vertex_embedding_dimension: int = Field(default=768, description="Embedding dimension")
 
@@ -85,7 +90,7 @@ class Settings(BaseSettings):
     vertex_eval_enabled: bool = Field(default=True, description="Enable Vertex AI evaluation")
     vertex_eval_metrics: List[str] = Field(
         default=["coherence", "fluency", "safety", "groundedness"],
-        description="Vertex AI evaluation metrics"
+        description="Vertex AI evaluation metrics",
     )
 
     # Centaur Model Configuration
@@ -95,19 +100,97 @@ class Settings(BaseSettings):
     centaur_timeout: int = Field(default=30, description="Centaur API timeout")
     centaur_max_retries: int = Field(default=3, description="Max retries for Centaur API")
 
+    # Lambda Cloud GPU Inference Configuration
+    lambda_enabled: bool = Field(default=False, description="Enable Lambda GPU inference routing")
+    lambda_cloud_api_key: Optional[str] = Field(default=None, description="Lambda Cloud API key")
+    lambda_cloud_base_url: str = Field(
+        default="https://cloud.lambda.ai/api/v1",
+        description="Lambda Cloud API base URL",
+    )
+    lambda_instance_name: str = Field(
+        default="psyai-gpu-inference",
+        description="Name to assign to launched Lambda instances",
+    )
+    lambda_instance_type: str = Field(
+        default="gpu_2x_h100_sxm",
+        description="Lambda instance type name for on-demand GPU",
+    )
+    lambda_region_name: Optional[str] = Field(
+        default=None,
+        description="Optional Lambda region override for instance launch",
+    )
+    lambda_ssh_key_names: str = Field(
+        default="",
+        description="Comma-separated Lambda SSH key names for launch payload",
+    )
+    lambda_file_system_names: str = Field(
+        default="",
+        description="Comma-separated Lambda file system names for launch payload",
+    )
+    lambda_launch_timeout_seconds: int = Field(
+        default=600,
+        description="Timeout waiting for Lambda instance to become ready",
+    )
+    lambda_launch_poll_interval_seconds: int = Field(
+        default=10,
+        description="Polling interval for Lambda instance readiness checks",
+    )
+    lambda_idle_shutdown_seconds: int = Field(
+        default=900,
+        description="Idle time before terminating Lambda instance",
+    )
+    lambda_auto_shutdown_enabled: bool = Field(
+        default=True,
+        description="Automatically terminate idle Lambda instances",
+    )
+    lambda_inference_base_url: Optional[str] = Field(
+        default=None,
+        description="Optional fixed inference URL override (skips auto IP discovery)",
+    )
+    lambda_inference_scheme: str = Field(
+        default="http",
+        description="Scheme for instance-local inference endpoint",
+    )
+    lambda_inference_port: int = Field(default=8000, description="Port for inference service")
+    lambda_inference_mode: str = Field(
+        default="completion",
+        description="Inference payload mode: completion or chat",
+    )
+    lambda_inference_path: str = Field(
+        default="/v1/completions",
+        description="OpenAI-compatible inference endpoint path",
+    )
+    lambda_inference_model: str = Field(
+        default="marcelbinz/Llama-3.1-Centaur-70B",
+        description="Default model identifier sent to inference endpoint",
+    )
+    lambda_inference_api_key: Optional[str] = Field(
+        default=None,
+        description="Optional API key for inference endpoint auth",
+    )
+    lambda_inference_timeout_seconds: int = Field(
+        default=120,
+        description="Timeout for inference calls in seconds",
+    )
+
     # Vector Database Configuration
     vector_db_type: str = Field(
-        default="vertex-vector-search",
-        description="Vector DB type: vertex-vector-search, chroma"
+        default="vertex-vector-search", description="Vector DB type: vertex-vector-search, chroma"
     )
 
     # Vertex AI Vector Search
-    vertex_index_id: Optional[str] = Field(default=None, description="Vertex Vector Search index ID")
-    vertex_index_endpoint_id: Optional[str] = Field(default=None, description="Vertex Vector Search endpoint ID")
+    vertex_index_id: Optional[str] = Field(
+        default=None, description="Vertex Vector Search index ID"
+    )
+    vertex_index_endpoint_id: Optional[str] = Field(
+        default=None, description="Vertex Vector Search endpoint ID"
+    )
     vertex_deployed_index_id: Optional[str] = Field(default=None, description="Deployed index ID")
 
     # Chroma (for backward compatibility)
-    chroma_persist_directory: str = Field(default="./chroma_db", description="Chroma persistence directory")
+    chroma_persist_directory: str = Field(
+        default="./chroma_db", description="Chroma persistence directory"
+    )
 
     # Embedding Configuration
     embedding_model: str = Field(
@@ -129,7 +212,9 @@ class Settings(BaseSettings):
 
     # Human-in-the-Loop Configuration
     hitl_enabled: bool = Field(default=True, description="Enable HITL")
-    hitl_notification_email: Optional[str] = Field(default=None, description="HITL notification email")
+    hitl_notification_email: Optional[str] = Field(
+        default=None, description="HITL notification email"
+    )
     hitl_notification_webhook: Optional[str] = Field(default=None, description="HITL webhook URL")
     hitl_auto_assign: bool = Field(default=True, description="Auto-assign reviews")
 
@@ -192,6 +277,16 @@ class Settings(BaseSettings):
             raise ValueError(f"vector_db_type must be one of {allowed}")
         return v.lower()
 
+    @field_validator("lambda_inference_mode")
+    @classmethod
+    def validate_lambda_inference_mode(cls, v: str) -> str:
+        """Validate Lambda inference mode."""
+        allowed = ["completion", "chat"]
+        normalized = v.lower().strip()
+        if normalized not in allowed:
+            raise ValueError(f"lambda_inference_mode must be one of {allowed}")
+        return normalized
+
     @property
     def is_development(self) -> bool:
         """Check if running in development mode."""
@@ -225,6 +320,8 @@ class Settings(BaseSettings):
             "secret_key",
             "gcp_credentials_path",
             "centaur_api_key",
+            "lambda_cloud_api_key",
+            "lambda_inference_api_key",
             "sentry_dsn",
             "seed_admin_password",
             "database_url",
